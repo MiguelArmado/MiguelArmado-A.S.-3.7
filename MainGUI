@@ -1,0 +1,47 @@
+'''
+Title: Foreign Exchange
+Written by: Miguel Armado
+Date Written: 25/06/2024
+Purpose of the program: To allow the user to convert currencies through the use of a GUI
+V1: Create a GUI for my main menu where the user can convert currencies
+'''
+# Import the necessary library/ies
+from tkinter import *
+from currency_converter import CurrencyConverter
+
+# Variables
+gray = "#E6E6E6"
+orange = "FFB570"
+blue = "A"
+
+# Create a GUI class
+class Forex:
+
+    def __init__(self):
+        self.left_frame = Frame(bg=gray)
+        self.left_frame.grid()
+
+        self.forex_lbl1 = Label(self.left_frame,
+                                text="Currency Converter",
+                                bg=gray,
+                                font=("Helvetica", 18, "bold"))
+        self.forex_lbl1.grid(ipadx=30, ipady=20,
+                             sticky=S)
+        
+        self.amount_lbl2 = Label(self.left_frame,
+                                 text="Amount:",
+                                 bg=gray,
+                                 font=("Helvetica", 9, "bold"))
+        self.amount_lbl2.grid(row=1, column=0,
+                             sticky=W)
+
+# Main Program
+converter = CurrencyConverter()
+print(converter.convert('nzd_to_ils', 10))
+root = Tk()
+root.title("Foreign Exchange")
+root.configure(bg="#E6E6E6")
+root.geometry("580x310")
+root.resizable(0, 0)
+Forex()
+root.mainloop()
