@@ -7,40 +7,75 @@ V1: Create a GUI for my main menu where the user can convert currencies
 '''
 # Import the necessary library/ies
 from tkinter import *
-from currency_converter import CurrencyConverter
 
-# Variables
+# Font styles
+sub_headings = ("Helvetica", 9, "bold")
+
+# Colors
 gray = "#E6E6E6"
 orange = "FFB570"
-blue = "A"
+blue = "#8282FF"
 
 # Create a GUI class
 class Forex:
 
     def __init__(self):
-        self.left_frame = Frame(bg=gray)
+        self.amount_num = IntVar()
+        self.from_num = IntVar()
+        self.left_frame = Frame()
+        self.left_frame.config(bg=gray)
         self.left_frame.grid()
+
+        # Setting the default amounts for the amount to be converted
+        # and converted to 0
+
+        self.amount_num.set("")
+        self.from_num.set("")
 
         self.forex_lbl1 = Label(self.left_frame,
                                 text="Currency Converter",
                                 bg=gray,
                                 font=("Helvetica", 18, "bold"))
-        self.forex_lbl1.grid(ipadx=30, ipady=20,
+        self.forex_lbl1.grid(ipadx=10, ipady=20,
                              sticky=S)
-        
+
         self.amount_lbl2 = Label(self.left_frame,
                                  text="Amount:",
                                  bg=gray,
-                                 font=("Helvetica", 9, "bold"))
+                                 font=sub_headings)
         self.amount_lbl2.grid(row=1, column=0,
-                             sticky=W)
+                              ipadx=6, ipady=5,
+                              sticky=W)
+
+        self.amount_num_entry1 = Entry(self.left_frame,
+                                textvariable=self.amount_num,
+                                bg="#ABB0FF",
+                                font=sub_headings,
+                                width=25)
+        self.amount_num.grid(row=1, column=0,
+                             sticky=E)
+
+        self.from_lbl3 = Label(self.left_frame,
+                               text="From:",
+                               bg=gray,
+                               font=sub_headings)
+        self.from_lbl3.grid(row=2, column=0,
+                            ipadx=10, ipady=5,
+                            sticky=W)
+
+        self.from_num_entry2 = Entry(self.left_frame,
+                              textvariable=self.from_num,
+                              font=sub_headings,
+                              width=25)
+        self.from_num.grid(row=2, column=0,
+                           sticky=E)
+
+        self
 
 # Main Program
-converter = CurrencyConverter()
-print(converter.convert('nzd_to_ils', 10))
 root = Tk()
 root.title("Foreign Exchange")
-root.configure(bg="#E6E6E6")
+root.configure(bg=gray)
 root.geometry("580x310")
 root.resizable(0, 0)
 Forex()
