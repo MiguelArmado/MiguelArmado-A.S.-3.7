@@ -1,12 +1,24 @@
-'''
+"""
 Title: Foreign Exchange
 Written by: Miguel Armado
 Date Written: 25/06/2024
 Purpose of the program: To allow the user to convert currencies through the use of a GUI
 V1: Create a GUI for my main menu where the user can convert currencies
-'''
+"""
 # Import the necessary library/ies
 from tkinter import *
+import requests
+from tkinter import ttk
+
+# Initialize the API so that I can use the data to get the currencies and conversions
+url = 'https://v6.exchangerate-api.com/v6/9e764c29f1f368dc0202e365/latest/USD'
+
+response = requests.get(url)
+data = response.json()
+
+# Variables
+# List of currencies
+currencies = list(data["conversion_rates"].keys())
 
 # Font styles
 sub_headings = ("Helvetica", 9, "bold")
@@ -16,12 +28,16 @@ gray = "#E6E6E6"
 orange = "FFB570"
 blue = "#8282FF"
 
-# Create a GUI class
-class Forex:
 
+# Create a GUI class
+class Forex(Tk):
     def __init__(self):
+        super().__init__()
+        self.configure(bg=gray)
+        self.title("Foreign Exchange"), self.geometry("580x310"), self.resizable(0, 0)
+
         self.amount_num = IntVar()
-        self.from_num = IntVar()
+        self.from_currency = currencies
         self.left_frame = Frame()
         self.left_frame.config(bg=gray)
         self.left_frame.grid()
@@ -30,7 +46,6 @@ class Forex:
         # and converted to 0
 
         self.amount_num.set("")
-        self.from_num.set("")
 
         self.forex_lbl1 = Label(self.left_frame,
                                 text="Currency Converter",
@@ -48,12 +63,12 @@ class Forex:
                               sticky=W)
 
         self.amount_num_entry1 = Entry(self.left_frame,
-                                textvariable=self.amount_num,
-                                bg="#ABB0FF",
-                                font=sub_headings,
-                                width=25)
-        self.amount_num.grid(row=1, column=0,
-                             sticky=E)
+                                       textvariable=self.amount_num,
+                                       bg="#ABB0FF",
+                                       font=sub_headings,
+                                       width=25)
+        self.amount_num_entry1.grid(row=1, column=0,
+                                    sticky=E)
 
         self.from_lbl3 = Label(self.left_frame,
                                text="From:",
@@ -63,20 +78,46 @@ class Forex:
                             ipadx=10, ipady=5,
                             sticky=W)
 
-        self.from_num_entry2 = Entry(self.left_frame,
-                              textvariable=self.from_num,
-                              font=sub_headings,
-                              width=25)
-        self.from_num.grid(row=2, column=0,
-                           sticky=E)
+        self.from_currency_combo1 = ttk.Combobox(self.left_frame,
+                                                 width=23,
+                                                 textvariable=self.from_currency,
+                                                 values=self.from_currency,
+                                                 validate='key',
+                                                 validatecommand=(self.register(self.__validate_combo_input), '%d', '%P'))
+        self.from_currency_combo1.bind('<KeyRelease>', self.__update_combo)
+        self.from_currency_combo1.grid(row=2, column=0,
+                                       ipadx=10, ipady=5,
+                                       sticky=E)
 
-        self
+        self.spacer1 = Label(self.left_frame, text="",
+                             bg=gray)
+        self.spacer1.grid(row=3, column=0)
 
-# Main Program
-root = Tk()
-root.title("Foreign Exchange")
-root.configure(bg=gray)
-root.geometry("580x310")
-root.resizable(0, 0)
+        self.to_lbl4 = Label(self.left_frame,
+                             text="To: ",
+                             width=8,
+                             bg=gray,
+                             font=sub_headings)
+        self.to_lbl4.grid(row=4, column=0,
+                          sticky=W)
+
+        self.to_combo2 = ttk.Combobox(self.left_frame,
+                                      width=23,
+                                      textvariable=self.from_currency)
+
+        self.mainloop()
+
+    @staticmethod
+    def __validate_combo_input(action, text) -> bool:
+        if int(action) == 1:
+            return text.isalpha() and len(text) <= 3
+        else:
+            return True
+
+    def __update_combo(self, event):
+        if event.char.isalpha() or event.keysym == 'BackSpace':
+            self.from_currency_combo1.configure(values=[i for i in self.from_currency if
+                                                        i.startswith(self.from_currency_combo1.get().upper())])
+
+
 Forex()
-root.mainloop()
