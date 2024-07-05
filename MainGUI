@@ -114,8 +114,6 @@ class Forex(Tk):
                                      ipadx=10, ipady=5,
                                      sticky=E)
 
-
-
         self.button_calculate = Button(self.left_frame,
                                        width=15,
                                        text="Calculate",
