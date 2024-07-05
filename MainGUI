@@ -37,7 +37,9 @@ class Forex(Tk):
         self.title("Foreign Exchange"), self.geometry("580x310"), self.resizable(0, 0)
 
         self.amount_num = IntVar()
-        self.from_currency = currencies
+        self.currencies = currencies
+        self.from_currency = StringVar()
+        self.to_currency = StringVar()
         self.left_frame = Frame()
         self.left_frame.config(bg=gray)
         self.left_frame.grid()
@@ -81,7 +83,7 @@ class Forex(Tk):
         self.from_currency_combo1 = ttk.Combobox(self.left_frame,
                                                  width=23,
                                                  textvariable=self.from_currency,
-                                                 values=self.from_currency,
+                                                 values=self.currencies,
                                                  validate='key',
                                                  validatecommand=(self.register(self.__validate_combo_input), '%d', '%P'))
         self.from_currency_combo1.bind('<KeyRelease>', self.__update_combo)
@@ -101,11 +103,31 @@ class Forex(Tk):
         self.to_lbl4.grid(row=4, column=0,
                           sticky=W)
 
-        self.to_combo2 = ttk.Combobox(self.left_frame,
-                                      width=23,
-                                      textvariable=self.from_currency)
+        self.to_currency_combo2 = ttk.Combobox(self.left_frame,
+                                               width=23,
+                                               textvariable=self.to_currency,
+                                               values=self.currencies,
+                                               validate='key',
+                                               validatecommand=(self.register(self.__validate_combo_input), '%d', '%P'))
+        self.to_currency_combo2.bind('<KeyRelease>', self.__update_combo)
+        self.to_currency_combo2.grid(row=4, column=0,
+                                     ipadx=10, ipady=5,
+                                     sticky=E)
 
+
+
+        self.button_calculate = Button(self.left_frame,
+                                       width=15,
+                                       text="Calculate",
+                                       command=self.printword)
+        self.button_calculate.grid(row=5, column=0)
         self.mainloop()
+
+    def printword(self):
+        if self.from_currency.get() in self.currencies:
+            print(self.from_currency.get())
+        else:
+            print("Not in currencies")
 
     @staticmethod
     def __validate_combo_input(action, text) -> bool:
@@ -116,7 +138,7 @@ class Forex(Tk):
 
     def __update_combo(self, event):
         if event.char.isalpha() or event.keysym == 'BackSpace':
-            self.from_currency_combo1.configure(values=[i for i in self.from_currency if
+            self.from_currency_combo1.configure(values=[i for i in self.currencies if
                                                         i.startswith(self.from_currency_combo1.get().upper())])
 
 
