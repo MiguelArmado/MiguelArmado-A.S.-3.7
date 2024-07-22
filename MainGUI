@@ -25,8 +25,10 @@ sub_headings = ("Helvetica", 9, "bold")
 
 # Colors
 gray = "#E6E6E6"
-orange = "FFB570"
+orange = "#FFB570"
 blue = "#8282FF"
+red = "#FF0000"
+black = "#000000"
 
 
 # Create a GUI class
@@ -34,29 +36,31 @@ class Forex(Tk):
     def __init__(self):
         super().__init__()
         self.configure(bg=gray)
+        # Change the title of the program to Foreign Exchange, set the size of the window and make it not resizeable
         self.title("Foreign Exchange"), self.geometry("580x310"), self.resizable(0, 0)
 
+        # Set up the text variable's data types that will constantly change throughout the game.
         self.amount_num = IntVar()
         self.currencies = currencies
         self.from_currency = StringVar()
         self.to_currency = StringVar()
-        self.left_frame = Frame()
-        self.left_frame.config(bg=gray)
-        self.left_frame.grid()
+        self.converted_amount = IntVar()
 
         # Setting the default amounts for the amount to be converted
         # and converted to 0
 
         self.amount_num.set("")
 
-        self.forex_lbl1 = Label(self.left_frame,
+        # Label for the title of the program
+        self.forex_lbl1 = Label(self,
                                 text="Currency Converter",
                                 bg=gray,
                                 font=("Helvetica", 18, "bold"))
         self.forex_lbl1.grid(ipadx=10, ipady=20,
                              sticky=S)
 
-        self.amount_lbl2 = Label(self.left_frame,
+        # Label for the amount the user wants to convert
+        self.amount_lbl2 = Label(self,
                                  text="Amount:",
                                  bg=gray,
                                  font=sub_headings)
@@ -64,7 +68,8 @@ class Forex(Tk):
                               ipadx=6, ipady=5,
                               sticky=W)
 
-        self.amount_num_entry1 = Entry(self.left_frame,
+        # Entry box for the amount the user wants to convert
+        self.amount_num_entry1 = Entry(self,
                                        textvariable=self.amount_num,
                                        bg="#ABB0FF",
                                        font=sub_headings,
@@ -72,7 +77,8 @@ class Forex(Tk):
         self.amount_num_entry1.grid(row=1, column=0,
                                     sticky=E)
 
-        self.from_lbl3 = Label(self.left_frame,
+        # Label for the currency the user wants to convert from
+        self.from_lbl3 = Label(self,
                                text="From:",
                                bg=gray,
                                font=sub_headings)
@@ -80,7 +86,12 @@ class Forex(Tk):
                             ipadx=10, ipady=5,
                             sticky=W)
 
-        self.from_currency_combo1 = ttk.Combobox(self.left_frame,
+        # a Combobox that will display the currencies the user wants to convert from
+        # This ComboBox also has a feature to autocomplete or change the contents
+        # of the combobox to display the currencies that start with the letter the user
+        # inputted when the user releases a key. It also does not allow the input of special characters and
+        # numbers, decreasing the possibilities of errors in the program.
+        self.from_currency_combo1 = ttk.Combobox(self,
                                                  width=23,
                                                  textvariable=self.from_currency,
                                                  values=self.currencies,
@@ -91,11 +102,13 @@ class Forex(Tk):
                                        ipadx=10, ipady=5,
                                        sticky=E)
 
-        self.spacer1 = Label(self.left_frame, text="",
+        # Space between comboboxes
+        self.spacer1 = Label(self, text="",
                              bg=gray)
         self.spacer1.grid(row=3, column=0)
 
-        self.to_lbl4 = Label(self.left_frame,
+        # Label for the currency the user wants to convert to
+        self.to_lbl4 = Label(self,
                              text="To: ",
                              width=8,
                              bg=gray,
@@ -103,7 +116,9 @@ class Forex(Tk):
         self.to_lbl4.grid(row=4, column=0,
                           sticky=W)
 
-        self.to_currency_combo2 = ttk.Combobox(self.left_frame,
+        # Same with the first combobox, it does the same but this time it will contain the currency the user wants to
+        # converts to
+        self.to_currency_combo2 = ttk.Combobox(self,
                                                width=23,
                                                textvariable=self.to_currency,
                                                values=self.currencies,
@@ -114,19 +129,44 @@ class Forex(Tk):
                                      ipadx=10, ipady=5,
                                      sticky=E)
 
-        self.button_calculate = Button(self.left_frame,
-                                       width=15,
+        # Button to calculate the conversion
+        self.button_calculate = Button(self,
+                                       width=24,
+                                       height=2,
+                                       fg=black,
+                                       bg=orange,
                                        text="Calculate",
-                                       command=self.printword)
-        self.button_calculate.grid(row=5, column=0)
+                                       font=sub_headings,
+                                       command=self.printword
+                                       )
+        self.button_calculate.grid(row=6, column=0,
+                                   sticky="E")
+
+        # Label for the error message
+        self.error_lbl5 = Label(self,
+                                text="",
+                                bg=gray,
+                                fg=red,
+                                font=sub_headings,
+                                justify=CENTER)
+        self.error_lbl5.grid(row=5, column=0,
+                             sticky="E")
+
+        # Label for the converted amount
+
         self.mainloop()
 
+    # Just a testing method. Will be used for further development of the program such as validation of the currencies
     def printword(self):
-        if self.from_currency.get() in self.currencies:
-            print(self.from_currency.get())
+        # This purpose of this method is to validate if both of the currencies are valid
+        if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
+            self.error_lbl5.config(text="")
+            print(self.from_currency.get().upper(), self.to_currency.get().upper())
         else:
-            print("Not in currencies")
+            self.error_lbl5.config(text="Both currencies must be valid")
 
+
+    # These static methods are just for the autocomplete capability of my two comboboxes
     @staticmethod
     def __validate_combo_input(action, text) -> bool:
         if int(action) == 1:
