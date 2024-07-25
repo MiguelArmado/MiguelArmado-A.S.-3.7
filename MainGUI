@@ -35,16 +35,16 @@ black = "#000000"
 class Forex(Tk):
     def __init__(self):
         super().__init__()
-        self.configure(bg=gray)
         # Change the title of the program to Foreign Exchange, set the size of the window and make it not resizeable
         self.title("Foreign Exchange"), self.geometry("580x310"), self.resizable(0, 0)
+        self.configure(bg=gray)
 
         # Set up the text variable's data types that will constantly change throughout the game.
-        self.amount_num = IntVar()
+        self.amount_num = DoubleVar()
         self.currencies = currencies
         self.from_currency = StringVar()
         self.to_currency = StringVar()
-        self.converted_amount = IntVar()
+        self.converted_amount = DoubleVar()
 
         # Setting the default amounts for the amount to be converted
         # and converted to 0
@@ -128,20 +128,6 @@ class Forex(Tk):
         self.to_currency_combo2.grid(row=4, column=0,
                                      ipadx=10, ipady=5,
                                      sticky=E)
-
-        # Button to calculate the conversion
-        self.button_calculate = Button(self,
-                                       width=24,
-                                       height=2,
-                                       fg=black,
-                                       bg=orange,
-                                       text="Calculate",
-                                       font=sub_headings,
-                                       command=self.printword
-                                       )
-        self.button_calculate.grid(row=6, column=0,
-                                   sticky="E")
-
         # Label for the error message
         self.error_lbl5 = Label(self,
                                 text="",
@@ -153,17 +139,58 @@ class Forex(Tk):
                              sticky="E")
 
         # Label for the converted amount
+        self.converted_lbl6 = Label(self,
+                                    text="Converted amount: ",
+                                    fg=black,
+                                    bg=gray,
+                                    font=sub_headings)
+        self.converted_lbl6.grid(row=6, column=0,
+                                 ipady=10, sticky="W")
+
+        # Entry box for the converted amount. Even though it is an Entry box, this widget will not
+        # accept values, only display values.
+        self.amount_converted = Entry(self,
+                                      textvariable=self.converted_amount,
+                                      fg=black,
+                                      font=sub_headings,
+                                      state=DISABLED,
+                                      width=18)
+        self.amount_converted.grid(row=6, column=0,
+                                   ipady=10, sticky="E")
+
+
+        # Button to calculate the conversion
+        self.button_calculate = Button(self,
+                                       width=24,
+                                       height=2,
+                                       fg=black,
+                                       bg=orange,
+                                       text="Calculate",
+                                       font=sub_headings,
+                                       command=self.calculate
+                                       )
+        self.button_calculate.grid(row=7, column=0,
+                                   sticky="E")
 
         self.mainloop()
 
     # Just a testing method. Will be used for further development of the program such as validation of the currencies
-    def printword(self):
+    def validate_currencies(self):
         # This purpose of this method is to validate if both of the currencies are valid
         if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
             self.error_lbl5.config(text="")
-            print(self.from_currency.get().upper(), self.to_currency.get().upper())
+            return True
         else:
             self.error_lbl5.config(text="Both currencies must be valid")
+            return False
+
+    def calculate(self):
+        validate = self.validate_currencies()
+        if validate:
+            print(data["conversion_rates"][self.from_currency.get().upper()])
+
+
+
 
 
     # These static methods are just for the autocomplete capability of my two comboboxes
