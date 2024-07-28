@@ -11,7 +11,7 @@ import requests
 from tkinter import ttk
 
 # Initialize the API so that I can use the data to get the currencies and conversions
-url = 'https://v6.exchangerate-api.com/v6/9e764c29f1f368dc0202e365/latest/USD'
+url = "https://v6.exchangerate-api.com/v6/9e764c29f1f368dc0202e365/latest/USD"
 
 response = requests.get(url)
 data = response.json()
@@ -40,7 +40,7 @@ class Forex(Tk):
         self.configure(bg=gray)
 
         # Set up the text variable's data types that will constantly change throughout the game.
-        self.amount_num = DoubleVar()
+        self.amount_num = StringVar()
         self.currencies = currencies
         self.from_currency = StringVar()
         self.to_currency = StringVar()
@@ -138,7 +138,7 @@ class Forex(Tk):
         self.error_lbl5.grid(row=5, column=0,
                              sticky="E")
 
-        # Label for the converted amount
+        # Label for the converted amount (text)
         self.converted_lbl6 = Label(self,
                                     text="Converted amount: ",
                                     fg=black,
@@ -147,7 +147,7 @@ class Forex(Tk):
         self.converted_lbl6.grid(row=6, column=0,
                                  ipady=10, sticky="W")
 
-        # Label for the converted amount
+        # Label for the converted amount value
         self.amount_converted_lbl7 = Label(self,
                                            text="",
                                            fg=black,
@@ -169,7 +169,7 @@ class Forex(Tk):
                                        width=24,
                                        height=2,
                                        fg=black,
-                                       bg=orange,
+                                       bg=blue,
                                        text="Calculate",
                                        font=sub_headings,
                                        command=self.calculate,
@@ -184,20 +184,32 @@ class Forex(Tk):
     def validate_currencies(self):
         # This purpose of this method is to validate if both of the currencies are valid
         if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
-            self.error_lbl5.config(text="")
             return True
         else:
-            self.error_lbl5.config(text="Both currencies must be valid")
             return False
 
     def calculate(self):
         validate_currency = self.validate_currencies()
-        if validate_currency:
-            from_to_usd = self.amount_num.get() * int(data["conversion_rates"][self.from_currency.get().upper()])
-            self.converted_value = from_to_usd * data["conversion_rates"][self.to_currency.get().upper()]
-            self.amount_converted_lbl7.config(text=f"{self.converted_value:.2f}")
+        validate_amount = self.validate_amount()
+        if validate_amount:
+            if validate_currency:
+                self.converted_value = self.conversion_to_usd() * data["conversion_rates"][self.to_currency.get().upper()]
+                self.amount_converted_lbl7.config(text=f"{self.converted_value:.2f}")
+            else:
+                self.error_lbl5.config(text="Both currencies must be valid")
+                self.amount_converted_lbl7.config(text="")
         else:
+            self.error_lbl5.config(text="Amount must only be a number")
             self.amount_converted_lbl7.config(text="")
+            
+    def conversion_to_usd(self):
+        return float(self.amount_num.get()) / data["conversion_rates"][self.from_currency.get().upper()]
+
+    def validate_amount(self):
+        if not self.amount_num.get().isdigit():
+            return False
+        else:
+            return True
 
     # These static methods are just for the autocomplete capability of my two comboboxes
     @staticmethod
