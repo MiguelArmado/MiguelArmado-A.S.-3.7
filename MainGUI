@@ -11,25 +11,27 @@ import requests
 from tkinter import ttk
 
 # Initialize the API so that I can use the data to get the currencies and conversions
-url = "https://v6.exchangerate-api.com/v6/9e764c29f1f368dc0202e365/latest/USD"
+URL = "https://v6.exchangerate-api.com/v6/9e764c29f1f368dc0202e365/latest/USD"
 
-response = requests.get(url)
-data = response.json()
+RESPONSE = requests.get(URL)
+DATA = RESPONSE.json()
 
-# Variables
+# Constants
 # List of currencies
-currencies = list(data["conversion_rates"].keys())
+CURRENCIES = list(DATA["conversion_rates"].keys())
 
 # Font styles
-sub_headings = ("Helvetica", 9, "bold")
+SUB_HEADINGS = ("Helvetica", 9, "bold")
 
 # Colors
-gray = "#E6E6E6"
-orange = "#FFB570"
-blue = "#8282FF"
-red = "#FF0000"
-black = "#000000"
+GRAY = "#E6E6E6"
+BLUE = "#8282FF"
+RED = "#FF0000"
+BLACK = "#000000"
+LIGHT_BLUE = "#ABB0FF"
 
+# Maximum amount of money the user can convert
+MAX_AMOUNT = 10000
 
 # Create a GUI class
 class Forex(Tk):
@@ -37,11 +39,11 @@ class Forex(Tk):
         super().__init__()
         # Change the title of the program to Foreign Exchange, set the size of the window and make it not resizeable
         self.title("Foreign Exchange"), self.geometry("510x320"), self.resizable(0, 0)
-        self.configure(bg=gray)
+        self.configure(bg=GRAY)
 
         # Set up the text variable's data types that will constantly change throughout the game.
         self.amount_num = StringVar()
-        self.currencies = currencies
+        self.currencies = CURRENCIES
         self.from_currency = StringVar()
         self.to_currency = StringVar()
         self.converted_value = DoubleVar()
@@ -54,7 +56,7 @@ class Forex(Tk):
         # Label for the title of the program
         self.forex_lbl1 = Label(self,
                                 text="Currency Converter",
-                                bg=gray,
+                                bg=GRAY,
                                 font=("Helvetica", 18, "bold"))
         self.forex_lbl1.grid(ipadx=10, ipady=20,
                              sticky=S)
@@ -62,8 +64,8 @@ class Forex(Tk):
         # Label for the amount the user wants to convert
         self.amount_lbl2 = Label(self,
                                  text="Amount:",
-                                 bg=gray,
-                                 font=sub_headings)
+                                 bg=GRAY,
+                                 font=SUB_HEADINGS)
         self.amount_lbl2.grid(row=1, column=0,
                               ipadx=6, ipady=5,
                               sticky=W)
@@ -71,8 +73,8 @@ class Forex(Tk):
         # Entry box for the amount the user wants to convert
         self.amount_num_entry1 = Entry(self,
                                        textvariable=self.amount_num,
-                                       bg="#ABB0FF",
-                                       font=sub_headings,
+                                       bg=LIGHT_BLUE,
+                                       font=SUB_HEADINGS,
                                        width=25)
         self.amount_num_entry1.grid(row=1, column=0,
                                     sticky=E)
@@ -80,8 +82,8 @@ class Forex(Tk):
         # Label for the currency the user wants to convert from
         self.from_lbl3 = Label(self,
                                text="From:",
-                               bg=gray,
-                               font=sub_headings)
+                               bg=GRAY,
+                               font=SUB_HEADINGS)
         self.from_lbl3.grid(row=2, column=0,
                             ipadx=10, ipady=5,
                             sticky=W)
@@ -104,15 +106,15 @@ class Forex(Tk):
 
         # Space between comboboxes
         self.spacer1 = Label(self, text="",
-                             bg=gray)
+                             bg=GRAY)
         self.spacer1.grid(row=3, column=0)
 
         # Label for the currency the user wants to convert to
         self.to_lbl4 = Label(self,
                              text="To: ",
                              width=8,
-                             bg=gray,
-                             font=sub_headings)
+                             bg=GRAY,
+                             font=SUB_HEADINGS)
         self.to_lbl4.grid(row=4, column=0,
                           sticky=W)
 
@@ -131,9 +133,9 @@ class Forex(Tk):
         # Label for the error message
         self.error_lbl5 = Label(self,
                                 text="",
-                                bg=gray,
-                                fg=red,
-                                font=sub_headings,
+                                bg=GRAY,
+                                fg=RED,
+                                font=SUB_HEADINGS,
                                 justify=CENTER)
         self.error_lbl5.grid(row=5, column=0,
                              sticky="E")
@@ -141,17 +143,17 @@ class Forex(Tk):
         # Label for the converted amount (text)
         self.converted_lbl6 = Label(self,
                                     text="Converted amount: ",
-                                    fg=black,
-                                    bg=gray,
-                                    font=sub_headings)
+                                    fg=BLACK,
+                                    bg=GRAY,
+                                    font=SUB_HEADINGS)
         self.converted_lbl6.grid(row=6, column=0,
                                  ipady=10, sticky="W")
 
         # Label for the converted amount value
         self.amount_converted_lbl7 = Label(self,
                                            text="",
-                                           fg=black,
-                                           font=sub_headings,
+                                           fg=BLACK,
+                                           font=SUB_HEADINGS,
                                            width=18,
                                            borderwidth=1,
                                            relief=SOLID)
@@ -161,17 +163,17 @@ class Forex(Tk):
         # Spacer for between the error message and the calculate button
         self.spacer2 = Label(self,
                              text="",
-                             bg=gray)
+                             bg=GRAY)
         self.spacer2.grid(row=7, column=0)
 
         # Button to calculate the conversion
         self.button_calculate = Button(self,
                                        width=24,
                                        height=2,
-                                       fg=black,
-                                       bg=blue,
+                                       fg=BLACK,
+                                       bg=BLUE,
                                        text="Calculate",
-                                       font=sub_headings,
+                                       font=SUB_HEADINGS,
                                        command=self.calculate,
                                        borderwidth=1,
                                        relief=SOLID
@@ -186,30 +188,35 @@ class Forex(Tk):
         if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
             return True
         else:
-            return False
+            self.error_lbl5.config(text="Both currencies must be valid")
+            self.amount_converted_lbl7.config(text="")
 
     def calculate(self):
         validate_currency = self.validate_currencies()
         validate_amount = self.validate_amount()
         if validate_amount:
             if validate_currency:
-                self.converted_value = self.conversion_to_usd() * data["conversion_rates"][self.to_currency.get().upper()]
+                self.converted_value = self.conversion_to_usd() * DATA["conversion_rates"][self.to_currency.get().upper()]
+                self.error_lbl5.config(text="")
                 self.amount_converted_lbl7.config(text=f"{self.converted_value:.2f}")
-            else:
-                self.error_lbl5.config(text="Both currencies must be valid")
-                self.amount_converted_lbl7.config(text="")
-        else:
-            self.error_lbl5.config(text="Amount must only be a number")
-            self.amount_converted_lbl7.config(text="")
             
     def conversion_to_usd(self):
-        return float(self.amount_num.get()) / data["conversion_rates"][self.from_currency.get().upper()]
+        return float(self.amount_num.get()) / DATA["conversion_rates"][self.from_currency.get().upper()]
 
     def validate_amount(self):
-        if not self.amount_num.get().isdigit():
-            return False
-        else:
-            return True
+        try:
+            amount = float(self.amount_num.get())
+            if amount > MAX_AMOUNT:
+                self.amount_converted_lbl7.config(text="")
+                self.error_lbl5.config(text="Amount must be equal to or below 10,000")
+            elif amount <= 0:
+                self.amount_converted_lbl7.config(text="")
+                self.error_lbl5.config(text="Amount must be greater than 0")
+            else:
+                return True
+        except ValueError:
+            self.error_lbl5.config(text="Amount must only be a number")
+            self.amount_converted_lbl7.config(text="")
 
     # These static methods are just for the autocomplete capability of my two comboboxes
     @staticmethod
