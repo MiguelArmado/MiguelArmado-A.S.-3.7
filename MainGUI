@@ -33,6 +33,7 @@ LIGHT_BLUE = "#ABB0FF"
 # Maximum amount of money the user can convert
 MAX_AMOUNT = 10000
 
+
 # Create a GUI class
 class Forex(Tk):
     def __init__(self):
@@ -50,7 +51,6 @@ class Forex(Tk):
 
         # Setting the default amounts for the amount to be converted
         # and converted to 0
-
         self.amount_num.set("")
 
         # Label for the title of the program
@@ -104,7 +104,7 @@ class Forex(Tk):
                                        ipadx=10, ipady=5,
                                        sticky=E)
 
-        # Space between comboboxes
+        # Space between Combo-boxes
         self.spacer1 = Label(self, text="",
                              bg=GRAY)
         self.spacer1.grid(row=3, column=0)
@@ -180,45 +180,49 @@ class Forex(Tk):
                                        )
         self.button_calculate.grid(row=8, column=0,
                                    sticky="E")
-
         self.mainloop()
 
+    # This purpose of this method is to validate if both of the currencies are valid
     def validate_currencies(self):
-        # This purpose of this method is to validate if both of the currencies are valid
         if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
             return True
         else:
             self.error_lbl5.config(text="Both currencies must be valid")
             self.amount_converted_lbl7.config(text="")
 
+    # This method calculates the conversion of the USD conversion of the from_currency to the to_currency,
+    # both selected by the user
     def calculate(self):
         validate_currency = self.validate_currencies()
         validate_amount = self.validate_amount()
+        from_currency_to_usd = self.conversion_to_usd()
         if validate_amount:
             if validate_currency:
-                self.converted_value = self.conversion_to_usd() * DATA["conversion_rates"][self.to_currency.get().upper()]
+                self.converted_value = from_currency_to_usd * DATA["conversion_rates"][self.to_currency.get().upper()]
                 self.error_lbl5.config(text="")
                 self.amount_converted_lbl7.config(text=f"{self.converted_value:.2f}")
-            
+
+    # This method returns the value when the amount of from_currency selected by the user is converted to USD
     def conversion_to_usd(self):
         return float(self.amount_num.get()) / DATA["conversion_rates"][self.from_currency.get().upper()]
 
+    # This method validates the amount inputted by the user on the entry box for the amount to be converted
     def validate_amount(self):
         try:
             amount = float(self.amount_num.get())
-            if amount > MAX_AMOUNT:
-                self.amount_converted_lbl7.config(text="")
-                self.error_lbl5.config(text="Amount must be equal to or below 10,000")
-            elif amount <= 0:
-                self.amount_converted_lbl7.config(text="")
-                self.error_lbl5.config(text="Amount must be greater than 0")
-            else:
+            if amount > MAX_AMOUNT:  # If the amount is greater than the MAX_AMOUNT of money that could be converted
+                self.amount_converted_lbl7.config(text="")  # Clear the Label for the amount converted
+                self.error_lbl5.config(text="Amount must be equal to or below 10,000")  # Print error message
+            elif amount <= 0:  # If the amount is less than or equal to 0
+                self.amount_converted_lbl7.config(text="")  # Clear the Label for the amount converted
+                self.error_lbl5.config(text="Amount must be greater than 0")  # Print error message
+            else:  # If amount is valid
                 return True
-        except ValueError:
-            self.error_lbl5.config(text="Amount must only be a number")
-            self.amount_converted_lbl7.config(text="")
+        except ValueError:  # If user inputted a value that's invalid (letters, spaces, special characters)
+            self.error_lbl5.config(text="Amount must only be a digits, no commas (,)")  # Print error message
+            self.amount_converted_lbl7.config(text="")  # Clear Label for amount converted
 
-    # These static methods are just for the autocomplete capability of my two comboboxes
+    # These static methods are just for the autocomplete capability of my two Combo-boxes
     @staticmethod
     def __validate_combo_input(action, text) -> bool:
         if int(action) == 1:
@@ -229,9 +233,10 @@ class Forex(Tk):
     def __update_combo(self, event):
         if event.char.isalpha() or event.keysym == 'BackSpace':
             self.from_currency_combo1.configure(values=[i for i in self.currencies if
-                                                        i.startswith(self.from_currency_combo1.get().upper())])
+                                                i.startswith(self.from_currency_combo1.get().upper())])
             self.to_currency_combo2.configure(values=[i for i in self.currencies if
-                                                        i.startswith(self.to_currency_combo2.get().upper())])
+                                              i.startswith(self.to_currency_combo2.get().upper())])
 
 
+# Main Program
 Forex()
