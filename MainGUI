@@ -40,7 +40,7 @@ class Forex(Tk):
     def __init__(self):
         super().__init__()
         # Change the title of the program to Foreign Exchange, set the size of the window and make it not resizeable
-        self.title("Foreign Exchange"), self.geometry("510x320"), self.resizable(0, 0)
+        self.title("Foreign Exchange"), self.geometry("510x350"), self.resizable(0, 0)
         self.configure(bg=GRAY)
 
         # Set up the text variable's data types that will constantly change throughout the game.
@@ -94,8 +94,6 @@ class Forex(Tk):
         # of the combobox to display the currencies that start with the letter the user
         # inputted when the user releases a key. It also does not allow the input of special characters and
         # numbers, decreasing the possibilities of errors in the program.
-        def capitalize(var):
-            var.set(var.get().upper())
         self.from_currency_combo1 = ttk.Combobox(self,
                                                  width=23,
                                                  textvariable=self.from_currency,
@@ -185,7 +183,20 @@ class Forex(Tk):
                                        )
         self.button_calculate.grid(row=8, column=0,
                                    sticky="E")
-        
+
+        self.exchange_rate_label8 = Label(self,
+                                          text="Tessadsdadat"
+                                               "dsdsdsds"
+                                               "sdsdsds",
+                                          font=("Helvetica", 20, "bold"),
+                                          borderwidth=1,
+                                          relief=SOLID,
+                                          wraplength=50
+                                          )
+        self.exchange_rate_label8.grid(column=1, row=1,
+                                       rowspan=8,
+                                       padx=10, sticky=EW)
+
         self.mainloop()
 
     # This purpose of this method is to validate if both of the currencies are valid
@@ -236,6 +247,9 @@ class Forex(Tk):
 
     # These static methods are just for the autocomplete capability of my two Combo-boxes
     @staticmethod
+    def capitalize_currency(var):
+        var.set(var.get().upper())
+
     def __validate_combo_input(action, text) -> bool:
         if int(action) == 1:
             return text.isalpha() and len(text) <= 3
