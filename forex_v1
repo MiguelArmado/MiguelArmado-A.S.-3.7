@@ -204,7 +204,10 @@ class Forex(Tk):
 
     # This method returns the value when the amount of from_currency selected by the user is converted to USD
     def conversion_to_usd(self):
-        return float(self.amount_num.get()) / DATA["conversion_rates"][self.from_currency.get().upper()]
+        try:
+            return float(self.amount_num.get()) / DATA["conversion_rates"][self.from_currency.get().upper()]
+        except ValueError:
+            pass
 
     # This method validates the amount inputted by the user on the entry box for the amount to be converted
     def validate_amount(self):
