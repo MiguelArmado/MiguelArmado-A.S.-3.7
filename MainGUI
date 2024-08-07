@@ -40,7 +40,7 @@ class Forex(Tk):
     def __init__(self):
         super().__init__()
         # Change the title of the program to Foreign Exchange, set the size of the window and make it not resizeable
-        self.title("Foreign Exchange"), self.geometry("510x350"), self.resizable(0, 0)
+        self.title("Foreign Exchange"), self.geometry("685x350"), self.resizable(0, 0)
         self.configure(bg=GRAY)
 
         # Set up the text variable's data types that will constantly change throughout the game.
@@ -185,16 +185,17 @@ class Forex(Tk):
                                    sticky="E")
 
         self.exchange_rate_label8 = Label(self,
-                                          text="Tessadsdadat"
-                                               "dsdsdsds"
-                                               "sdsdsds",
-                                          font=("Helvetica", 20, "bold"),
+                                          text="Welcome! This program allows the user to "
+                                               "convert currencies. Put the amount first "
+                                               ""
+                                               "before changing the currencies.",
+                                          font=("Helvetica", 10, "bold"),
                                           borderwidth=1,
                                           relief=SOLID,
-                                          wraplength=50
+                                          wraplength=400
                                           )
-        self.exchange_rate_label8.grid(column=1, row=1,
-                                       rowspan=8,
+        self.exchange_rate_label8.grid(column=1, row=0,
+                                       rowspan=1,
                                        padx=10, sticky=EW)
 
         self.mainloop()
