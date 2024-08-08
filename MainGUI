@@ -40,7 +40,7 @@ class Forex(Tk):
     def __init__(self):
         super().__init__()
         # Change the title of the program to Foreign Exchange, set the size of the window and make it not resizeable
-        self.title("Foreign Exchange"), self.geometry("685x350"), self.resizable(0, 0)
+        self.title("Foreign Exchange"), self.geometry("685x330"), self.resizable(0, 0)
         self.configure(bg=GRAY)
 
         # Set up the text variable's data types that will constantly change throughout the game.
@@ -66,7 +66,7 @@ class Forex(Tk):
         self.amount_lbl2 = Label(self,
                                  text="Amount:",
                                  bg=GRAY,
-                                 font=SUB_HEADINGS)
+                                 font=("Helvetica", 12, "bold"))
         self.amount_lbl2.grid(row=1, column=0,
                               ipadx=6, ipady=5,
                               sticky=W)
@@ -76,9 +76,9 @@ class Forex(Tk):
                                        textvariable=self.amount_num,
                                        bg=LIGHT_BLUE,
                                        font=SUB_HEADINGS,
-                                       width=25)
+                                       width=23)
         self.amount_num_entry1.grid(row=1, column=0,
-                                    sticky=E)
+                                    sticky=E, ipady=5)
 
         # Label for the currency the user wants to convert from
         self.from_lbl3 = Label(self,
@@ -101,9 +101,8 @@ class Forex(Tk):
                                                  validate='key',
                                                  validatecommand=(self.register(self.__validate_combo_input), '%d', '%P'))
         self.from_currency_combo1.bind('<KeyRelease>', self.__update_combo)
-        self.from_currency_combo1.bind('<KeyRelease>', lambda _: capitalize(self.from_currency))
+        self.from_currency_combo1.bind('<KeyRelease>', lambda _: self.capitalize_currency(self.from_currency))
         self.from_currency_combo1.grid(row=2, column=0,
-                                       ipadx=10, ipady=5,
                                        sticky=E)
 
         # Space between Combo-boxes
@@ -129,9 +128,8 @@ class Forex(Tk):
                                                validate='key',
                                                validatecommand=(self.register(self.__validate_combo_input), '%d', '%P'))
         self.to_currency_combo2.bind('<KeyRelease>', self.__update_combo, '+')
-        self.to_currency_combo2.bind('<KeyRelease>', lambda _: capitalize(self.to_currency), '+')
+        self.to_currency_combo2.bind('<KeyRelease>', lambda _: self.capitalize_currency(self.to_currency), '+')
         self.to_currency_combo2.grid(row=4, column=0,
-                                     ipadx=10, ipady=5,
                                      sticky=E)
         # Label for the error message
         self.error_lbl5 = Label(self,
@@ -184,19 +182,22 @@ class Forex(Tk):
         self.button_calculate.grid(row=8, column=0,
                                    sticky="E")
 
-        self.exchange_rate_label8 = Label(self,
-                                          text="Welcome! This program allows the user to "
-                                               "convert currencies. Put the amount first "
-                                               ""
-                                               "before changing the currencies.",
-                                          font=("Helvetica", 10, "bold"),
-                                          borderwidth=1,
-                                          relief=SOLID,
-                                          wraplength=400
-                                          )
-        self.exchange_rate_label8.grid(column=1, row=0,
-                                       rowspan=1,
-                                       padx=10, sticky=EW)
+        self.instructions_label8 = Label(self,
+                                         text="Welcome! This program allows the user to "
+                                              "convert currencies. Put the amount first "
+                                              "before changing the currencies.",
+                                         font=("Helvetica", 10, "bold"),
+                                         borderwidth=1,
+                                         relief=SOLID,
+                                         wraplength=400
+                                         )
+        self.instructions_label8.grid(column=1, row=0,
+                                      rowspan=1,
+                                      padx=10, sticky=EW)
+
+        self.exchange_rate_label9 = Label(self,
+                                          text="",
+                                          font=("Helvetica", 10, "bold")
 
         self.mainloop()
 
@@ -246,11 +247,11 @@ class Forex(Tk):
             self.error_lbl5.config(text="Amount must only be a digits, no commas (,)")  # Print error message
             self.amount_converted_lbl7.config(text="")  # Clear Label for amount converted
 
-    # These static methods are just for the autocomplete capability of my two Combo-boxes
-    @staticmethod
-    def capitalize_currency(var):
+    def capitalize_currency(self, var):
         var.set(var.get().upper())
 
+    # These static methods are just for the autocomplete capability of my two Combo-boxes
+    @staticmethod
     def __validate_combo_input(action, text) -> bool:
         if int(action) == 1:
             return text.isalpha() and len(text) <= 3
