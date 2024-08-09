@@ -29,7 +29,7 @@ GRAY = "#E6E6E6"
 BLUE = "#8282FF"
 RED = "#FF0000"
 BLACK = "#000000"
-LIGHT_BLUE = "#ABB0FF"
+LIGHT_BLUE = "#ccccfc"
 
 # Maximum amount of money the user can convert
 MAX_AMOUNT = 10000
@@ -100,8 +100,8 @@ class Forex(Tk):
                                                  values=self.currencies,
                                                  validate='key',
                                                  validatecommand=(self.register(self.__validate_combo_input), '%d', '%P'))
-        self.from_currency_combo1.bind('<KeyRelease>', self.__update_combo)
-        self.from_currency_combo1.bind('<KeyRelease>', lambda _: self.capitalize_currency(self.from_currency))
+        self.from_currency_combo1.bind('<KeyRelease>', self.__update_combo, '+')
+        self.from_currency_combo1.bind('<KeyRelease>', lambda _: self.capitalize_currency(self.from_currency), '+')
         self.from_currency_combo1.grid(row=2, column=0,
                                        sticky=E)
 
@@ -159,7 +159,7 @@ class Forex(Tk):
                                            borderwidth=1,
                                            relief=SOLID)
         self.amount_converted_lbl7.grid(row=6, column=0,
-                                        ipady=10, sticky="E")
+                                        ipady=5, sticky="E")
 
         # Spacer for between the error message and the calculate button
         self.spacer2 = Label(self,
@@ -193,13 +193,20 @@ class Forex(Tk):
                                          )
         self.instructions_label8.grid(column=1, row=0,
                                       rowspan=1,
-                                      padx=10, sticky=EW)
+                                      padx=10)
 
         self.exchange_rate_label9 = Label(self,
                                           text="",
-                                          font=("Helvetica", 10, "bold")
+                                          font=("Helvetica", 10, "bold"),
+                                          wraplength=300,
+                                          bg=GRAY
+                                          )
+        self.exchange_rate_label9.grid(column=1, row=1,
+                                       padx=10)
+#
 
         self.mainloop()
+
 
     # This purpose of this method is to validate if both of the currencies are valid
     def validate_currencies(self):
@@ -264,7 +271,6 @@ class Forex(Tk):
                                                 i.startswith(self.from_currency_combo1.get().upper())])
             self.to_currency_combo2.configure(values=[i for i in self.currencies if
                                               i.startswith(self.to_currency_combo2.get().upper())])
-
 
 # Main Program
 Forex()
