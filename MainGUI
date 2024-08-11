@@ -102,6 +102,8 @@ class Forex(Tk):
                                                  validatecommand=(self.register(self.__validate_combo_input), '%d', '%P'))
         self.from_currency_combo1.bind('<KeyRelease>', self.__update_combo, '+')
         self.from_currency_combo1.bind('<KeyRelease>', lambda _: self.capitalize_currency(self.from_currency), '+')
+        self.from_currency_combo1.bind('<KeyRelease>', lambda _: self.update_exchange_rate(), '+')
+        self.from_currency_combo1.bind('<ButtonPress-1>', lambda _: self.update_exchange_rate())
         self.from_currency_combo1.grid(row=2, column=0,
                                        sticky=E)
 
@@ -129,6 +131,8 @@ class Forex(Tk):
                                                validatecommand=(self.register(self.__validate_combo_input), '%d', '%P'))
         self.to_currency_combo2.bind('<KeyRelease>', self.__update_combo, '+')
         self.to_currency_combo2.bind('<KeyRelease>', lambda _: self.capitalize_currency(self.to_currency), '+')
+        self.to_currency_combo2.bind('<KeyRelease>', lambda _: self.update_exchange_rate(), '+')
+        self.to_currency_combo2.bind('<ButtonPress-1>', lambda _: self.update_exchange_rate())
         self.to_currency_combo2.grid(row=4, column=0,
                                      sticky=E)
         # Label for the error message
@@ -203,18 +207,22 @@ class Forex(Tk):
                                           )
         self.exchange_rate_label9.grid(column=1, row=1,
                                        padx=10)
-#
 
         self.mainloop()
 
+    def update_exchange_rate(self):
+        if self.from_currency.get().isalpha() and self.to_currency.get().isalpha():
+            if self.validate_currencies():
+                value = self.conversion_to_usd(1)
+                self.exchange_rate_label9.config(text=f"1 {self.from_currency.get()} == {value} {self.to_currency.get()}")
+        else:
+            self.exchange_rate_label9.config(text="")
+            print("False")
 
     # This purpose of this method is to validate if both of the currencies are valid
     def validate_currencies(self):
         if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
             return True
-        else:
-            self.error_lbl5.config(text="Both currencies must be valid")
-            self.amount_converted_lbl7.config(text="")
 
     # This method calculates the conversion of the USD conversion of the from_currency to the to_currency,
     # both selected by the user
@@ -222,19 +230,22 @@ class Forex(Tk):
         try:
             validate_currency = self.validate_currencies()
             validate_amount = self.validate_amount()
-            from_currency_to_usd = self.conversion_to_usd()
+            from_currency_to_usd = self.conversion_to_usd(float(self.amount_num.get()))
             if validate_amount:
                 if validate_currency:
                     self.converted_value = from_currency_to_usd * DATA["conversion_rates"][self.to_currency.get().upper()]
                     self.error_lbl5.config(text="")
                     self.amount_converted_lbl7.config(text=f"{self.converted_value:.2f}")
+            else:
+                self.error_lbl5.config(text="Both currencies must be valid")
+                self.amount_converted_lbl7.config(text="")
         except KeyError:
             pass
 
     # This method returns the value when the amount of from_currency selected by the user is converted to USD
-    def conversion_to_usd(self):
+    def conversion_to_usd(self, amount):
         try:
-            return float(self.amount_num.get()) / DATA["conversion_rates"][self.from_currency.get().upper()]
+            return amount / DATA["conversion_rates"][self.from_currency.get().upper()]
         except ValueError:
             pass
 
