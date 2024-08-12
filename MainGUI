@@ -187,26 +187,33 @@ class Forex(Tk):
                                    sticky="E")
 
         self.instructions_label8 = Label(self,
-                                         text="Welcome! This program allows the user to "
-                                              "convert currencies. Put the amount first "
-                                              "before changing the currencies.",
+                                         text="Welcome! This is a currency converter. "
+                                              "Put the amount first before changing the "
+                                              "currencies. An exchange rate will also be "
+                                              "displayed when you have input correct and "
+                                              "valid currencies in the boxes.",
                                          font=("Helvetica", 10, "bold"),
                                          borderwidth=1,
                                          relief=SOLID,
                                          wraplength=400
                                          )
         self.instructions_label8.grid(column=1, row=0,
-                                      rowspan=1,
+                                      rowspan=2,
                                       padx=10)
+
+        self.exchange_rate_below_label8 = Label(self,
+                                                text="Exchange rate will appear below!",
+                                                font=("Helvetica", 10, "bold"),
+                                                bg=GRAY)
+        self.exchange_rate_below_label8.grid(column=1, row=2)
 
         self.exchange_rate_label9 = Label(self,
                                           text="",
-                                          font=("Helvetica", 10, "bold"),
-                                          wraplength=300,
+                                          font=("Helvetica", 20, "bold"),
                                           bg=GRAY
                                           )
-        self.exchange_rate_label9.grid(column=1, row=1,
-                                       padx=10)
+        self.exchange_rate_label9.grid(column=1, row=3,
+                                       rowspan=3)
 
         self.mainloop()
 
@@ -214,7 +221,7 @@ class Forex(Tk):
         if self.from_currency.get().isalpha() and self.to_currency.get().isalpha():
             if self.validate_currencies():
                 value = self.conversion_to_usd(1)
-                self.exchange_rate_label9.config(text=f"1 {self.from_currency.get()} == {value} {self.to_currency.get()}")
+                self.exchange_rate_label9.config(text=f"1 {self.from_currency.get()} == {value * DATA['conversion_rates'][self.to_currency.get()]:.2f} {self.to_currency.get()}")
         else:
             self.exchange_rate_label9.config(text="")
             print("False")
@@ -236,9 +243,9 @@ class Forex(Tk):
                     self.converted_value = from_currency_to_usd * DATA["conversion_rates"][self.to_currency.get().upper()]
                     self.error_lbl5.config(text="")
                     self.amount_converted_lbl7.config(text=f"{self.converted_value:.2f}")
-            else:
-                self.error_lbl5.config(text="Both currencies must be valid")
-                self.amount_converted_lbl7.config(text="")
+                else:
+                    self.error_lbl5.config(text="Both currencies must be valid")
+                    self.amount_converted_lbl7.config(text="")
         except KeyError:
             pass
 
