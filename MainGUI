@@ -20,6 +20,7 @@ DATA = RESPONSE.json()
 # Constants
 # List of currencies
 CURRENCIES = list(DATA["conversion_rates"].keys())
+CURRENCIES.pop("ZWL")
 
 # Font styles
 SUB_HEADINGS = ("Helvetica", 9, "bold")
@@ -199,6 +200,7 @@ class Forex(Tk):
                                          )
         self.instructions_label8.grid(column=1, row=0,
                                       rowspan=2,
+                                      ipadx=10,
                                       padx=10)
 
         self.exchange_rate_below_label8 = Label(self,
@@ -210,10 +212,12 @@ class Forex(Tk):
         self.exchange_rate_label9 = Label(self,
                                           text="",
                                           font=("Helvetica", 20, "bold"),
-                                          bg=GRAY
+                                          relief=SOLID,
+                                          height=3,
+                                          width=24
                                           )
-        self.exchange_rate_label9.grid(column=1, row=3,
-                                       rowspan=3)
+        self.exchange_rate_label9.grid(column=1, row=2,
+                                       rowspan=8)
 
         self.mainloop()
 
@@ -221,7 +225,7 @@ class Forex(Tk):
         if self.from_currency.get().isalpha() and self.to_currency.get().isalpha():
             if self.validate_currencies():
                 value = self.conversion_to_usd(1)
-                self.exchange_rate_label9.config(text=f"1 {self.from_currency.get()} == {value * DATA['conversion_rates'][self.to_currency.get()]:.2f} {self.to_currency.get()}")
+                self.exchange_rate_label9.config(text=f"1 {self.from_currency.get()} = {value * DATA['conversion_rates'][self.to_currency.get()]:.2f} {self.to_currency.get()}")
         else:
             self.exchange_rate_label9.config(text="")
             print("False")
@@ -246,7 +250,7 @@ class Forex(Tk):
                 else:
                     self.error_lbl5.config(text="Both currencies must be valid")
                     self.amount_converted_lbl7.config(text="")
-        except KeyError:
+        except KeyError and ValueError:
             pass
 
     # This method returns the value when the amount of from_currency selected by the user is converted to USD
