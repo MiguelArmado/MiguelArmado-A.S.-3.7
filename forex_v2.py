@@ -186,7 +186,7 @@ class Forex(Tk):
                                        )
         self.button_calculate.grid(row=8, column=0,
                                    sticky="E")
-
+        # Instructions and the label for the instructions
         instructions = "Make sure when choosing currencies that the currencies " \
                        "aren't highlighted in blue when selected." \
                        " You can do this by clicking again on the box when you select a currency.\n\n" \
@@ -202,6 +202,7 @@ class Forex(Tk):
         self.instructions_label8.grid(column=1, row=0,
                                       rowspan=3)
 
+        # Label for showing where the exchange rate will appear
         exchange_rate_mssg = "Exchange rate will appear below!"
         self.exchange_rate_below_label9 = Label(self,
                                                 text=exchange_rate_mssg,
@@ -210,6 +211,7 @@ class Forex(Tk):
         self.exchange_rate_below_label9.grid(column=1, row=3,
                                              sticky=S)
 
+        # Label for the exchange rate
         self.exchange_rate_label10 = Label(self,
                                            text="",
                                            font=("Helvetica", 20, "bold"),
@@ -222,6 +224,7 @@ class Forex(Tk):
 
         self.mainloop()
 
+    # This is the method to update the exchange rate constantly when the user selected currencies
     def update_exchange_rate(self):
         if self.from_currency.get().isalpha() and self.to_currency.get().isalpha():
             if self.validate_currencies():
@@ -276,6 +279,7 @@ class Forex(Tk):
             self.error_lbl5.config(text="Amount must be digits, no commas (,)")  # Print error message
             self.amount_converted_lbl7.config(text="")  # Clear Label for amount converted
 
+    # This method is for autocapitalising the currencies
     def capitalize_currency(self, var):
         var.set(var.get().upper())
 
