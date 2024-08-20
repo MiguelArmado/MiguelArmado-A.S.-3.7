@@ -159,8 +159,8 @@ class Forex(Tk):
         self.amount_converted_lbl7 = Label(self,
                                            text="",
                                            fg=BLACK,
-                                           font=SUB_HEADINGS,
-                                           width=18,
+                                           font=("Helvetica", 12, "bold"),
+                                           width=13,
                                            borderwidth=1,
                                            relief=SOLID)
         self.amount_converted_lbl7.grid(row=6, column=0,
