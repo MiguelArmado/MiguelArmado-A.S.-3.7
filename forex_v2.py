@@ -279,11 +279,12 @@ class Forex(Tk):
             self.error_lbl5.config(text="Amount must be digits, no commas (,)")  # Print error message
             self.amount_converted_lbl7.config(text="")  # Clear Label for amount converted
 
-    # This method is for autocapitalising the currencies
-    def capitalize_currency(self, var):
+    # This method is for auto-capitalising the currencies
+    @staticmethod
+    def capitalize_currency(var):
         var.set(var.get().upper())
 
-    # These static methods are just for the autocomplete capability of my two Combo-boxes
+    # This static methods are just for the autocomplete capability of my two Combo-boxes
     @staticmethod
     def __validate_combo_input(action, text) -> bool:
         if int(action) == 1:
@@ -299,4 +300,6 @@ class Forex(Tk):
                                               i.startswith(self.to_currency_combo2.get().upper())])
 
 # Main Program
+
+
 Forex()
