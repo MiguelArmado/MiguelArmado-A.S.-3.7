@@ -224,47 +224,58 @@ class Forex(Tk):
 
         self.mainloop()
 
-    # This is the method to update the exchange rate constantly when the user selected currencies
     def update_exchange_rate(self):
+    # This is the method to update the exchange rate constantly when the user selected currencies
+        # If the both currencies are strings
         if self.from_currency.get().isalpha() and self.to_currency.get().isalpha():
+            # Calls the self.validate_currencies method and validate currencies
             if self.validate_currencies():
+                # Calls the self.conversion_to_usd method to convert 1 amount of the from_currency to USD
                 value = self.conversion_to_usd(1)
                 self.exchange_rate_label10.config(text=f"1 {self.from_currency.get()} = {value * DATA['conversion_rates'][self.to_currency.get()]:.4f} {self.to_currency.get()}")
+        # If one or both currencies are not strings, clear the exchange rate
         else:
             self.exchange_rate_label10.config(text="")
 
-    # This purpose of this method is to validate if both of the currencies are valid
     def validate_currencies(self):
-        if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
+    # This purpose of this method is to validate if both of the currencies are valid    
+            if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
             return True
 
-    # This method calculates the conversion of the USD conversion of the from_currency to the to_currency,
-    # both selected by the user
     def calculate(self):
+    # This method calculates the conversion of the USD conversion of the from_currency to the to_currency,
+    # both selected by the user        
         try:
             validate_currency = self.validate_currencies()
             validate_amount = self.validate_amount()
             from_currency_to_usd = self.conversion_to_usd(float(self.amount_num.get()))
+            # if the amount is validated (which is done by calling the self.validate_amount method)
             if validate_amount:
+                # If the currencies are both valid, change the label for the amount converted to the converted amount and clear the error label box
                 if validate_currency:
                     self.converted_value = from_currency_to_usd * DATA["conversion_rates"][self.to_currency.get().upper()]
                     self.error_lbl5.config(text="")
                     self.amount_converted_lbl7.config(text=f"{self.converted_value:.2f}")
+                # If one or both of the currencies are invalid, clear the label for the amount converted and display an error message
                 else:
                     self.error_lbl5.config(text="Both currencies must be valid")
                     self.amount_converted_lbl7.config(text="")
+        # If the user inputs a non-integer in the entry box for the amount, don't display an error message on the terminal
         except ValueError:
             pass
 
-    # This method returns the value when the amount of from_currency selected by the user is converted to USD
+
     def conversion_to_usd(self, amount):
+    # This method returns the value when the amount of from_currency selected by the user is converted to USD
+        # If the program can successfully calculate the conversion, return the value
         try:
             return amount / DATA["conversion_rates"][self.from_currency.get().upper()]
+        # If the program cannot do the calculation because of unlike data types or the currency is not valid, return False
         except KeyError or ValueError:
             return False
 
-    # This method validates the amount inputted by the user on the entry box for the amount to be converted
     def validate_amount(self):
+    # This method validates the amount inputted by the user on the entry box for the amount to be converted    
         try:
             amount = float(self.amount_num.get())
             if amount > MAX_AMOUNT:  # If the amount is greater than the MAX_AMOUNT of money that could be converted
@@ -284,15 +295,17 @@ class Forex(Tk):
     def capitalize_currency(var):
         var.set(var.get().upper())
 
-    # This static methods are just for the autocomplete capability of my two Combo-boxes
+    # This static method are just for the autocomplete capability of my two Combo-boxes
     @staticmethod
     def __validate_combo_input(action, text) -> bool:
+    # This method is responsible for limiting the input of the user in the comboboxes to three, because all currency codes only have three letters
         if int(action) == 1:
             return text.isalpha() and len(text) <= 3
         else:
             return True
 
     def __update_combo(self, event):
+    # This methos is responsible for changing the value of the comboboxes when the user presses a key and the user presses backspace.
         if event.char.isalpha() or event.keysym == 'BackSpace':
             self.from_currency_combo1.configure(values=[i for i in self.currencies if
                                                 i.startswith(self.from_currency_combo1.get().upper())])
