@@ -229,16 +229,19 @@ class Forex(Tk):
 
     def update_exchange_rate(self):
     # This is the method to update the exchange rate constantly when the user selected currencies
-        # If the both currencies are strings
-        if self.from_currency.get().isalpha() and self.to_currency.get().isalpha():
-            # Calls the self.validate_currencies method and validate currencies
-            if self.validate_currencies():
-                # Calls the self.conversion_to_usd method to convert 1 amount of the from_currency to USD
-                value = self.conversion_to_usd(1)
-                self.exchange_rate_label10.config(text=f"1 {self.from_currency.get()} = {value * DATA['conversion_rates'][self.to_currency.get()]:.4f} {self.to_currency.get()}")
-        # If one or both currencies are not strings, clear the exchange rate
-        else:
-            self.exchange_rate_label10.config(text="")
+        try:
+            # If the both currencies are strings
+            if self.from_currency.get().isalpha() and self.to_currency.get().isalpha():
+                # Calls the self.validate_currencies method and validate currencies
+                if self.validate_currencies():
+                    # Calls the self.conversion_to_usd method to convert 1 amount of the from_currency to USD
+                    value = self.conversion_to_usd(1)
+                    self.exchange_rate_label10.config(text=f"1 {self.from_currency.get()} = {value * DATA['conversion_rates'][self.to_currency.get()]:.4f} {self.to_currency.get()}")
+            # If one or both currencies are not strings, clear the exchange rate
+            else:
+                self.exchange_rate_label10.config(text="")
+        except KeyError:
+            pass
 
     def validate_currencies(self):
     # This purpose of this method is to validate if both of the currencies are valid    
@@ -266,7 +269,6 @@ class Forex(Tk):
         # If the user inputs a non-integer in the entry box for the amount, don't display an error message on the terminal
         except ValueError:
             pass
-
 
     def conversion_to_usd(self, amount):
     # This method returns the value when the amount of from_currency selected by the user is converted to USD
