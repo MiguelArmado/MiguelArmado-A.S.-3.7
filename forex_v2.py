@@ -285,7 +285,7 @@ class Forex(Tk):
             amount = float(self.amount_num.get())
             if amount > MAX_AMOUNT:  # If the amount is greater than the MAX_AMOUNT of money that could be converted
                 self.amount_converted_lbl7.config(text="")  # Clear the Label for the amount converted
-                self.error_lbl5.config(text="Amount must be equal to or below 10,000")  # Print error message
+                self.error_lbl5.config(text=f"Amount must be equal to or below {MAX_AMOUNT}")  # Print error message
             elif amount <= 0:  # If the amount is less than or equal to 0
                 self.amount_converted_lbl7.config(text="")  # Clear the Label for the amount converted
                 self.error_lbl5.config(text="Amount must be greater than 0")  # Print error message
