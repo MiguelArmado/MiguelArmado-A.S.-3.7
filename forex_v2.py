@@ -14,7 +14,10 @@ from tkinter import ttk
 # Initialize the API so that I can use the data to get the currencies and conversions
 URL = "https://v6.exchangerate-api.com/v6/9e764c29f1f368dc0202e365/latest/USD"
 
+# Request to get the .json file returned by the URL
 RESPONSE = requests.get(URL)
+
+# Assign the .json file to a variable
 DATA = RESPONSE.json()
 
 # Constants
