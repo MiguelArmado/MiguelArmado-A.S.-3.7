@@ -243,7 +243,7 @@ class Forex(Tk):
     def validate_currencies(self):
     # This purpose of this method is to validate if both of the currencies are valid    
             if self.from_currency.get().upper() in self.currencies and self.to_currency.get().upper() in self.currencies:
-            return True
+                return True
 
     def calculate(self):
     # This method calculates the conversion of the USD conversion of the from_currency to the to_currency,
@@ -308,7 +308,7 @@ class Forex(Tk):
             return True
 
     def __update_combo(self, event):
-    # This methos is responsible for changing the value of the comboboxes when the user presses a key and the user presses backspace.
+    # This method is responsible for changing the value of the comboboxes when the user presses a key and the user presses backspace.
         if event.char.isalpha() or event.keysym == 'BackSpace':
             self.from_currency_combo1.configure(values=[i for i in self.currencies if
                                                 i.startswith(self.from_currency_combo1.get().upper())])
