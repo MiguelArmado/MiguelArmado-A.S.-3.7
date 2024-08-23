@@ -5,4 +5,5 @@ This program will perform the simple process of calculating and converting amoun
 I will be using an API to help me make this program possible and by doing that, it will make my program more flexible and will calculate conversions using
 real-time currency conversions.
 
-The libraries that are required for my program to run are the requests, json, and tkinter library. I used requests in order for me to get information from websites using URL. I used json to manipulate the said information from a website which is in a form of a .json file. Lastly, I used tkinter in order to create a GUI for my program.
+The libraries that are required for my program to run are the requests, json, and tkinter library. I used requests in order for me to get information from websites using URL. I used json to manipulate the said information from a website which is in a form of a .json file. Lastly, I used tkinter in order to create a GUI for my program. These libraries are important
+for my program to function. The user also needs to be connected the internet while using my program so that the code can utilise the API that retrieves currency conversions.    
